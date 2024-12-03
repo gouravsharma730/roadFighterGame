@@ -13,9 +13,9 @@
         body {
             font-family: Arial, sans-serif;
             background-image: url('./skyAndLights.gif');
-            background-size:cover ;
+            background-size: cover;
             background-repeat: no-repeat; 
-            background-position:center;
+            background-position: center;
         }
         .hide {
             display: none;
@@ -85,6 +85,32 @@
             text-transform: uppercase;
             box-shadow: 0 5px 5px black;
         }
+        .touch-controls {
+            display: none;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        .touch-controls button {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            .touch-controls {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -92,10 +118,16 @@
         <div class="score">Score: 0</div>
         <div class="startScreen">
             <p>Press to start the game</p>
-            <p>Use arrow keys to control the car!</p>
+            <p>Use arrow keys or touch controls to play!</p>
         </div>
         <div class="gameArea">
             <!-- Game area content -->
+        </div>
+        <div class="touch-controls">
+            <button id="left">⬅️</button>
+            <button id="up">⬆️</button>
+            <button id="right">➡️</button>
+            <button id="down">⬇️</button>
         </div>
     </div>
 
@@ -103,22 +135,34 @@
         const score = document.querySelector('.score');
         const startScreen = document.querySelector('.startScreen');
         const gameArea = document.querySelector('.gameArea');
+        const touchControls = document.querySelector('.touch-controls');
+        const buttons = {
+            left: document.getElementById('left'),
+            up: document.getElementById('up'),
+            right: document.getElementById('right'),
+            down: document.getElementById('down')
+        };
 
         startScreen.addEventListener('click', start);
-        let player = {
-            speed: 5,
-            score: 0,
-        };
 
-        let keys = {
-            ArrowUp: false,
-            ArrowDown: false,
-            ArrowLeft: false,
-            ArrowRight: false,
-        };
+        let player = { speed: 5, score: 0 };
+        let keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
 
         document.addEventListener('keydown', keyDown);
         document.addEventListener('keyup', keyUp);
+
+        // Add touch control listeners
+        buttons.left.addEventListener('touchstart', () => keys.ArrowLeft = true);
+        buttons.left.addEventListener('touchend', () => keys.ArrowLeft = false);
+
+        buttons.right.addEventListener('touchstart', () => keys.ArrowRight = true);
+        buttons.right.addEventListener('touchend', () => keys.ArrowRight = false);
+
+        buttons.up.addEventListener('touchstart', () => keys.ArrowUp = true);
+        buttons.up.addEventListener('touchend', () => keys.ArrowUp = false);
+
+        buttons.down.addEventListener('touchstart', () => keys.ArrowDown = true);
+        buttons.down.addEventListener('touchend', () => keys.ArrowDown = false);
 
         function keyDown(e) {
             e.preventDefault();
@@ -133,6 +177,7 @@
         function start() {
             startScreen.classList.add('hide');
             gameArea.innerHTML = "";
+            touchControls.style.display = 'flex'; // Show touch controls on game start for mobile
             player.start = true;
             player.score = 0;
             window.requestAnimationFrame(gamePlay);
@@ -175,7 +220,7 @@
 
         function moveLines() {
             let lines = document.querySelectorAll('.lines');
-            lines.forEach(function (item) {
+            lines.forEach(item => {
                 if (item.y >= 700) item.y -= 750;
                 item.y += player.speed;
                 item.style.top = item.y + 'px';
@@ -186,11 +231,12 @@
             player.start = false;
             startScreen.classList.remove('hide');
             startScreen.innerHTML = `<p>Game Over!</p><p>Score: ${player.score}</p><p>Click to Restart</p>`;
+            touchControls.style.display = 'none'; // Hide touch controls on game end
         }
 
         function moveEnemy(car) {
             let enemy = document.querySelectorAll('.enemy');
-            enemy.forEach(function (item) {
+            enemy.forEach(item => {
                 if (isCollide(car, item)) {
                     endGame();
                 }
