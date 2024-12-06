@@ -1,0 +1,7 @@
+1: Audio
+2 improvement in the start and in the end of the game.
+3 boom message on collision.
+4 Allow one collision. 
+5 try to add fuel tractor.
+6 your highest score and current score.
+7: try to increase speed with time
