@@ -54,21 +54,20 @@
         }
         .score {
             position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            width: 300px;
+            top: 5px;
+            left: 40%;
+            width: 100px;
             height: 70px;
             line-height: 70px;
             text-align: center;
-            color: white;
-            font-size: 1.5em;
+            color:aqua;
+            font-size: 15px;
             font-family: fantasy;
-            box-shadow: 0 5px 5px #4b4242;
+            z-index: 100;
         }
         .startScreen {
             position: absolute;
+            border-radius: 10px;
             background-color: white;
             left: 50%;
             top: 50%;
@@ -104,14 +103,13 @@
 
         .countdown {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 40%;
+            left: 38%;
             transform: translate(-50%, -50%);
             font-size: 4em;
             color: white;
-            text-shadow: 0 0 20px black;
+            text-shadow: 0 0 20px rgb(148, 136, 136);
             font-family: 'Courier New', Courier, monospace;
-            background-color: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 10px;
             z-index: 20;
@@ -219,7 +217,7 @@
             const countdownOverlay = document.createElement('div');
             countdownOverlay.classList.add('countdown');
             gameArea.appendChild(countdownOverlay);
-
+            startScreen.classList.add('hide');
             let countdownNumber = 3;
             countdownOverlay.innerText = countdownNumber;
 
@@ -228,7 +226,7 @@
                 if (countdownNumber > 0) {
                     countdownOverlay.innerText = countdownNumber;
                 } else if (countdownNumber === 0) {
-                    countdownOverlay.innerText = 'Go!';
+                    countdownOverlay.innerText = 'Go';
                 } else {
                     clearInterval(interval);
                     countdownOverlay.remove();
@@ -243,6 +241,7 @@
             touchControls.style.display = 'flex'; 
             player.start = true;
             player.score = 0;
+            player.speed = 5
 
             gameStartAudio.play();
             gameArea.innerHTML = "";
@@ -272,7 +271,7 @@
             }
             let message = document.createElement('div');
                 message.classList.add('startMessage');
-                message.innerText = "Let's start";
+                message.innerText = "All the best";
                 gameArea.appendChild(message);
 
                 message.y = 0;
@@ -304,13 +303,14 @@
                 item.style.top = item.y + 'px';
             });
         }
+        
 
         function moveEnemy(car) {
             let enemies = document.querySelectorAll('.enemy');
             enemies.forEach(item => {
                 if (isCollide(car, item)) {
-                    console.log('Game Over');
                     endGame();
+                    return;
                 }
                 if (item.y >= 700) {
                     item.y = -300;
@@ -325,7 +325,10 @@
             let car = document.querySelector('.car');
             let road = gameArea.getBoundingClientRect();
 
-            if (player.start) {
+            if (player.start){
+                if (player.score > 0 && player.score % 200 === 0) {
+                    player.speed += 1;
+                }
                 moveLines();
 
                 let message = document.querySelector('.startMessage');
@@ -351,15 +354,32 @@
                 car.style.top = player.y + 'px';
                 car.style.left = player.x + 'px';
 
+                if (player.start) {
                 player.score++;
                 score.innerText = "Score: " + player.score;
-
+            }
                 window.requestAnimationFrame(gamePlay);
             }
         }
 
         function endGame() {
             player.start = false;
+            startScreen.classList.remove('hide');
+            touchControls.style.display = 'none';
+            const highScore = localStorage.getItem('highScore') || 0;
+            if (player.score > highScore) {
+                localStorage.setItem('highScore', player.score);
+                startScreen.innerHTML = `
+                <b>Game Over!</b> <br> New High Score: ${player.score} <br>
+                Click to Restart
+            `;
+            } else {
+                startScreen.innerHTML = `
+                <b>Game Over!</b> <br> \nYour Score: ${player.score} <br>\nYour High Score: ${highScore} <br>
+                Click to Restart
+            `;
+            }
+            
             startScreen.classList.remove('hide');
         }
     </script>
