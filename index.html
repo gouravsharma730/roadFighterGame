@@ -242,7 +242,7 @@
             player.start = true;
             player.score = 0;
             player.speed = 5
-
+            gameStartAudio.currentTime = 0;
             gameStartAudio.play();
             gameArea.innerHTML = "";
 
@@ -367,6 +367,8 @@
             startScreen.classList.remove('hide');
             touchControls.style.display = 'none';
             const highScore = localStorage.getItem('highScore') || 0;
+            const gameStartAudio = document.getElementById('gameStartAudio');
+            gameStartAudio.pause();
             if (player.score > highScore) {
                 localStorage.setItem('highScore', player.score);
                 startScreen.innerHTML = `
