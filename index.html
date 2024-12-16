@@ -157,7 +157,7 @@
     <div class="carGame">
         <div class="score">Score: 0</div>
         <div class="startScreen">
-            <p>Press to start the game</p>
+            <p>Tap to start the game</p>
             <p>Use arrow keys or touch controls to play!</p>
         </div>
         <div class="gameArea">
@@ -241,7 +241,7 @@
             touchControls.style.display = 'flex'; 
             player.start = true;
             player.score = 0;
-            player.speed = 5
+            player.speed = 0
             gameStartAudio.currentTime = 0;
             gameStartAudio.play();
             gameArea.innerHTML = "";
@@ -373,12 +373,12 @@
                 localStorage.setItem('highScore', player.score);
                 startScreen.innerHTML = `
                 <b>Game Over!</b> <br> New High Score: ${player.score} <br>
-                Click to Restart
+                Tap to Restart
             `;
             } else {
                 startScreen.innerHTML = `
                 <b>Game Over!</b> <br> \nYour Score: ${player.score} <br>\nYour High Score: ${highScore} <br>
-                Click to Restart
+                Tap to Restart
             `;
             }
             
