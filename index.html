@@ -22,16 +22,20 @@
             display: none;
         }
         .car {
-            width: 50px;
-            height: 70px;
+            width: calc(12vw);
+            height: calc(16vw);
+            max-width: 50px; 
+            max-height: 70px;
             position: absolute;
             bottom: 250px;
             left:150px;
             background: url('./myCar.png') no-repeat center center / cover;
         }
         .enemy {
-            width: 50px;
-            height: 70px;
+            width: calc(12vw);
+            height: calc(16vw);
+            max-width: 50px; 
+            max-height: 70px;
             position: absolute;
             background: url('./oppCar.png') no-repeat center center / cover;
         }
@@ -149,6 +153,14 @@
                 justify-content: center;
                 gap: 10px;
             }
+            .score {
+                font-size: 4vw;
+            }
+
+            .startScreen {
+                font-size: 4vw;
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -241,7 +253,7 @@
             touchControls.style.display = 'flex'; 
             player.start = true;
             player.score = 0;
-            player.speed = 0
+            player.speed = 3
             gameStartAudio.currentTime = 0;
             gameStartAudio.play();
             gameArea.innerHTML = "";
@@ -327,7 +339,7 @@
 
             if (player.start){
                 if (player.score > 0 && player.score % 200 === 0) {
-                    player.speed += 1;
+                    player.speed += .5;
                 }
                 moveLines();
 
